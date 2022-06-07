@@ -1,0 +1,8 @@
+-cp src
+
+-lib nuke
+-lib pine
+
+-main Pom
+
+-js dist/app.js

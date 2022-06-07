@@ -3,6 +3,11 @@
 -lib nuke
 -lib pine
 
+-dce full
+
+-D js-es=6
+-D analyzer-optimize
+
 -main Pom
 
 -js dist/app.js

@@ -1,2 +1,3 @@
--cp ../pine-ui/src
--D pine=0.0.1
+# @install: lix --silent download "gh://github.com/wartman/pine#26d4a5d444bc4a2d6fe5e557cb49432f695e81c7" into pine/0.0.0/github/26d4a5d444bc4a2d6fe5e557cb49432f695e81c7
+-cp ${HAXE_LIBCACHE}/pine/0.0.0/github/26d4a5d444bc4a2d6fe5e557cb49432f695e81c7/src
+-D pine=0.0.0

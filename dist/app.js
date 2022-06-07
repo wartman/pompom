@@ -2664,7 +2664,7 @@ pompom_App.prototype = $extend(pine_ImmutableComponent.prototype,{
 	init: function(context) {
 		var _gthis = this;
 		var this1 = context;
-		var this11 = this1;
+		var this2 = this1;
 		var effect = function() {
 			var title = window.document.head.querySelector("title");
 			switch(_gthis.state.tracked.state_mode.get()._hx_index) {
@@ -2680,7 +2680,7 @@ pompom_App.prototype = $extend(pine_ImmutableComponent.prototype,{
 			}
 		};
 		pine_Queue.enqueue(pine_Process.current(),function() {
-			this11.addDisposable(new pine_Observer(effect));
+			this2.addDisposable(new pine_Observer(effect));
 		});
 	}
 	,render: function(context) {
@@ -2705,8 +2705,8 @@ pompom_App.prototype = $extend(pine_ImmutableComponent.prototype,{
 			_gthis.state.reset();
 		}};
 		var this1 = [new pine_html_HtmlTextComponent({ content : "Reset"})];
-		var this11 = [array1,array2,new pine_html_HtmlElementComponent({ tag : "button", attrs : attrs2, key : attrs2.key, isSvg : false, children : this1.slice()})];
-		var this1 = [array,new pine_html_HtmlElementComponent({ tag : "div", attrs : attrs1, key : attrs1.key, isSvg : false, children : this11.slice()})];
+		var this2 = [array1,array2,new pine_html_HtmlElementComponent({ tag : "button", attrs : attrs2, key : attrs2.key, isSvg : false, children : this1.slice()})];
+		var this1 = [array,new pine_html_HtmlElementComponent({ tag : "div", attrs : attrs1, key : attrs1.key, isSvg : false, children : this2.slice()})];
 		return new pine_html_HtmlElementComponent({ tag : "div", attrs : attrs, key : attrs.key, isSvg : false, children : this1.slice()});
 	}
 	,getComponentType: function() {
@@ -2747,8 +2747,8 @@ pompom_TimerDisplay.prototype = $extend(pine_ObserverComponent.prototype,{
 			throw new pine_PineException("Failed assertion: this.trackedObject != null");
 		}
 		var this1 = [new pine_html_HtmlTextComponent({ content : this.format(new Date(this.trackedObject.state_timer.get().tracked.state_secondsElapsed.get() * 1000))})];
-		var this11 = [array,new pine_html_HtmlElementComponent({ tag : "h1", attrs : attrs1, key : attrs1.key, isSvg : false, children : this1.slice()})];
-		return new pine_html_HtmlElementComponent({ tag : "div", attrs : attrs, key : attrs.key, isSvg : false, children : this11.slice()});
+		var this2 = [array,new pine_html_HtmlElementComponent({ tag : "h1", attrs : attrs1, key : attrs1.key, isSvg : false, children : this1.slice()})];
+		return new pine_html_HtmlElementComponent({ tag : "div", attrs : attrs, key : attrs.key, isSvg : false, children : this2.slice()});
 	}
 	,format: function(date) {
 		var minutes = date.getMinutes() + "";

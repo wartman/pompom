@@ -2,6 +2,7 @@ package pompom;
 
 import haxe.Timer;
 import pine.*;
+import pine.State; // This is required for some weird reason.
 
 enum TimerMode {
   Paused;

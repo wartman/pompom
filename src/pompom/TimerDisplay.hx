@@ -7,11 +7,11 @@ class TimerDisplay extends ObserverComponent {
   @track var timer:TimerState;
 
   public function render(context:Context) {
+    var suffix = timer.paused ? ' (Paused)' : '';
     return Html.div({},
       Html.h3({}, switch timer.mode {
-        case Paused: 'Paused';
-        case Working: 'Work';
-        case Break: 'Break';
+        case Working: 'Work' + suffix;
+        case Break: 'Break' + suffix;
       }),
       Html.h1({}, format(Date.fromTime(timer.secondsElapsed * 1000)))
     );

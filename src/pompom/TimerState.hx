@@ -5,41 +5,42 @@ import pine.*;
 import pine.State; // This is required for some weird reason.
 
 enum TimerMode {
-  Paused;
   Working;
   Break;
 }
 
 class TimerState implements Record {
-  @track public var mode:TimerMode = Paused;
+  @track public var paused:Bool = true;
+  @track public var mode:TimerMode = Working;
   @track public var secondsElapsed:Int = 0;
-  var prevMode:TimerMode = null;
   var timer:Timer = null;
 
   public function start() {
-    if (mode != Paused) return;
-
-    mode = prevMode != null ? prevMode : Working;
-    prevMode = null;
-    if (timer != null) timer.stop();
-    timer = createTimer();
-  }
-
-  public function reset() {
-    secondsElapsed = 0;
-    mode = Working;
-    prevMode = null;
+    if (!paused) return;
+    paused = false;
     if (timer != null) timer.stop();
     timer = createTimer();
   }
 
   public function pause() {
-    if (mode == Paused) return;
-
-    prevMode = mode;
-    mode = Paused;
+    if (paused) return;
+    paused = true;
     timer.stop();
     timer = null;
+  }
+
+  public function startWork() {
+    secondsElapsed = 0;
+    mode = Working;
+    if (timer != null) timer.stop();
+    timer = createTimer();
+  }
+
+  public function takeBreak() {
+    secondsElapsed = 0;
+    mode = Break;
+    if (timer != null) timer.stop();
+    timer = createTimer();
   }
 
   function createTimer() {

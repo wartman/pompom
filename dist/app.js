@@ -938,6 +938,55 @@ pine_ImmutableComponent.__super__ = pine_ProxyComponent;
 Object.assign(pine_ImmutableComponent.prototype, {
 	__class__: pine_ImmutableComponent
 });
+class pine_ObserverComponent extends pine_ProxyComponent {
+	_hx_constructor(key) {
+		super._hx_constructor(key);
+	}
+	createElement() {
+		return new pine_ObserverElement(this);
+	}
+}
+pine_ObserverComponent.__name__ = true;
+pine_ObserverComponent.__super__ = pine_ProxyComponent;
+Object.assign(pine_ObserverComponent.prototype, {
+	__class__: pine_ObserverComponent
+});
+class pine_UniqueId {
+}
+class pine_Isolate extends pine_ObserverComponent {
+	constructor(props) {
+		pine_Component._hx_skip_constructor = true;
+		super();
+		pine_Component._hx_skip_constructor = false;
+		this._hx_constructor(props);
+	}
+	_hx_constructor(props) {
+		this.trackedObject = null;
+		super._hx_constructor(props.key);
+		this.wrap = props.wrap;
+		this.trackedObjectProps = { };
+	}
+	render(context) {
+		return this.wrap(context);
+	}
+	getComponentType() {
+		return pine_Isolate.type;
+	}
+	createTrackedObject() {
+		this.trackedObject = new pine_TrackedObject_$d41d8cd98f00b204e9800998ecf8427e({ });
+		return this.trackedObject;
+	}
+	reuseTrackedObject(trackedObject) {
+		this.trackedObject = trackedObject;
+		this.trackedObject.replace(this.trackedObjectProps);
+		return this.trackedObject;
+	}
+}
+pine_Isolate.__name__ = true;
+pine_Isolate.__super__ = pine_ObserverComponent;
+Object.assign(pine_Isolate.prototype, {
+	__class__: pine_Isolate
+});
 class pine_Key {
 	static createMap() {
 		return new pine_KeyMap();
@@ -1286,19 +1335,6 @@ pine_Observer.__interfaces__ = [pine_Disposable];
 Object.assign(pine_Observer.prototype, {
 	__class__: pine_Observer
 });
-class pine_ObserverComponent extends pine_ProxyComponent {
-	_hx_constructor(key) {
-		super._hx_constructor(key);
-	}
-	createElement() {
-		return new pine_ObserverElement(this);
-	}
-}
-pine_ObserverComponent.__name__ = true;
-pine_ObserverComponent.__super__ = pine_ProxyComponent;
-Object.assign(pine_ObserverComponent.prototype, {
-	__class__: pine_ObserverComponent
-});
 class pine_ProxyElement extends pine_Element {
 	constructor(component) {
 		if(pine_Element._hx_skip_constructor) {
@@ -1626,20 +1662,22 @@ pine_State.__interfaces__ = [pine_Disposable];
 Object.assign(pine_State.prototype, {
 	__class__: pine_State
 });
-class pine_TrackedObject_$27c716fd7be837b16716bb1de74e2a1f {
+class pine_TrackedObject_$576d1671dac2a763630a2e40e9dd2283 {
 	constructor(props) {
 		this.state_secondsElapsed = new pine_State(props.secondsElapsed);
+		this.state_paused = new pine_State(props.paused);
 		this.state_mode = new pine_State(props.mode);
 	}
 	dispose() {
 		this.state_secondsElapsed.dispose();
+		this.state_paused.dispose();
 		this.state_mode.dispose();
 	}
 }
-pine_TrackedObject_$27c716fd7be837b16716bb1de74e2a1f.__name__ = true;
-pine_TrackedObject_$27c716fd7be837b16716bb1de74e2a1f.__interfaces__ = [pine_Disposable];
-Object.assign(pine_TrackedObject_$27c716fd7be837b16716bb1de74e2a1f.prototype, {
-	__class__: pine_TrackedObject_$27c716fd7be837b16716bb1de74e2a1f
+pine_TrackedObject_$576d1671dac2a763630a2e40e9dd2283.__name__ = true;
+pine_TrackedObject_$576d1671dac2a763630a2e40e9dd2283.__interfaces__ = [pine_Disposable];
+Object.assign(pine_TrackedObject_$576d1671dac2a763630a2e40e9dd2283.prototype, {
+	__class__: pine_TrackedObject_$576d1671dac2a763630a2e40e9dd2283
 });
 class pine_TrackedObject_$b958dd0262ea2d31051a5e42b38d7b09 {
 	constructor(props) {
@@ -1657,8 +1695,19 @@ pine_TrackedObject_$b958dd0262ea2d31051a5e42b38d7b09.__interfaces__ = [pine_Disp
 Object.assign(pine_TrackedObject_$b958dd0262ea2d31051a5e42b38d7b09.prototype, {
 	__class__: pine_TrackedObject_$b958dd0262ea2d31051a5e42b38d7b09
 });
-class pine_UniqueId {
+class pine_TrackedObject_$d41d8cd98f00b204e9800998ecf8427e {
+	constructor(props) {
+	}
+	dispose() {
+	}
+	replace(props) {
+	}
 }
+pine_TrackedObject_$d41d8cd98f00b204e9800998ecf8427e.__name__ = true;
+pine_TrackedObject_$d41d8cd98f00b204e9800998ecf8427e.__interfaces__ = [pine_Disposable];
+Object.assign(pine_TrackedObject_$d41d8cd98f00b204e9800998ecf8427e.prototype, {
+	__class__: pine_TrackedObject_$d41d8cd98f00b204e9800998ecf8427e
+});
 class pine_html_HtmlBootstrap {
 	constructor(el) {
 		this.el = el == null ? this.getDefaultRoot() : el;
@@ -1990,7 +2039,7 @@ class pompom_App extends pine_ImmutableComponent {
 		this._hx_constructor(props);
 	}
 	_hx_constructor(props) {
-		this.state = new pompom_TimerState({ mode : pompom_TimerMode.Paused});
+		this.state = new pompom_TimerState({ mode : pompom_TimerMode.Working});
 		super._hx_constructor(props.key);
 		if(props.state != null) {
 			this.state = props.state;
@@ -2001,15 +2050,13 @@ class pompom_App extends pine_ImmutableComponent {
 		let this1 = context;
 		let effect = function() {
 			let title = window.document.head.querySelector("title");
+			let suffix = _gthis.state.tracked.state_paused.get() ? " (Paused)" : "";
 			switch(_gthis.state.tracked.state_mode.get()._hx_index) {
 			case 0:
-				title.innerHTML = "PomPom | Paused";
+				title.innerHTML = "PomPom | Working" + suffix;
 				break;
 			case 1:
-				title.innerHTML = "PomPom | Working";
-				break;
-			case 2:
-				title.innerHTML = "PomPom | On Break";
+				title.innerHTML = "PomPom | On Break" + suffix;
 				break;
 			}
 		};
@@ -2020,25 +2067,39 @@ class pompom_App extends pine_ImmutableComponent {
 	render(context) {
 		let _gthis = this;
 		let attrs = { };
-		let array = new pompom_TimerDisplay({ timer : this.state});
-		let attrs1 = { };
-		let attrs2 = { onclick : function(e) {
-			e.preventDefault();
-			_gthis.state.start();
-		}};
-		let array1 = new pine_html_HtmlElementComponent({ tag : "button", attrs : attrs2, key : attrs2.key, isSvg : false, children : [new pine_html_HtmlTextComponent({ content : "Start"})].slice()});
-		let attrs3 = { onclick : function(e) {
-			e.preventDefault();
-			_gthis.state.pause();
-		}};
-		let array2 = new pine_html_HtmlElementComponent({ tag : "button", attrs : attrs3, key : attrs3.key, isSvg : false, children : [new pine_html_HtmlTextComponent({ content : "Pause"})].slice()});
-		let attrs4 = { onclick : function(e) {
-			e.preventDefault();
-			_gthis.state.reset();
-		}};
-		let children = [array1,array2,new pine_html_HtmlElementComponent({ tag : "button", attrs : attrs4, key : attrs4.key, isSvg : false, children : [new pine_html_HtmlTextComponent({ content : "Reset"})].slice()})];
-		let children1 = [array,new pine_html_HtmlElementComponent({ tag : "div", attrs : attrs1, key : attrs1.key, isSvg : false, children : children.slice()})];
-		return new pine_html_HtmlElementComponent({ tag : "div", attrs : attrs, key : attrs.key, isSvg : false, children : children1.slice()});
+		let children = [new pompom_TimerDisplay({ timer : this.state}),new pine_Isolate({ wrap : function(context) {
+			let attrs = { };
+			let attrs1 = { };
+			let array;
+			if(_gthis.state.tracked.state_paused.get() == true) {
+				let attrs = { onclick : function(e) {
+					e.preventDefault();
+					_gthis.state.start();
+				}};
+				array = new pine_html_HtmlElementComponent({ tag : "button", attrs : attrs, key : attrs.key, isSvg : false, children : [new pine_html_HtmlTextComponent({ content : "Start"})].slice()});
+			} else {
+				let attrs = { onclick : function(e) {
+					e.preventDefault();
+					_gthis.state.pause();
+				}};
+				array = new pine_html_HtmlElementComponent({ tag : "button", attrs : attrs, key : attrs.key, isSvg : false, children : [new pine_html_HtmlTextComponent({ content : "Pause"})].slice()});
+			}
+			let array1 = new pine_html_HtmlElementComponent({ tag : "div", attrs : attrs1, key : attrs1.key, isSvg : false, children : [array].slice()});
+			let attrs2 = { };
+			let attrs3 = { onclick : function(e) {
+				e.preventDefault();
+				_gthis.state.takeBreak();
+			}};
+			let array2 = new pine_html_HtmlElementComponent({ tag : "button", attrs : attrs3, key : attrs3.key, isSvg : false, children : [new pine_html_HtmlTextComponent({ content : "Take Break"})].slice()});
+			let attrs4 = { onclick : function(e) {
+				e.preventDefault();
+				_gthis.state.startWork();
+			}};
+			let children = [array2,new pine_html_HtmlElementComponent({ tag : "button", attrs : attrs4, key : attrs4.key, isSvg : false, children : [new pine_html_HtmlTextComponent({ content : "Start Work"})].slice()})];
+			let children1 = [array1,new pine_html_HtmlElementComponent({ tag : "div", attrs : attrs2, key : attrs2.key, isSvg : false, children : children.slice()})];
+			return new pine_html_HtmlElementComponent({ tag : "div", attrs : attrs, key : attrs.key, isSvg : false, children : children1.slice()});
+		}})];
+		return new pine_html_HtmlElementComponent({ tag : "div", attrs : attrs, key : attrs.key, isSvg : false, children : children.slice()});
 	}
 	getComponentType() {
 		return pompom_App.type;
@@ -2062,6 +2123,10 @@ class pompom_TimerDisplay extends pine_ObserverComponent {
 		this.trackedObjectProps = { timer : props.timer};
 	}
 	render(context) {
+		if(this.trackedObject == null) {
+			throw new pine_PineException("Failed assertion: this.trackedObject != null");
+		}
+		let suffix = this.trackedObject.state_timer.get().tracked.state_paused.get() ? " (Paused)" : "";
 		let attrs = { };
 		let attrs1 = { };
 		if(this.trackedObject == null) {
@@ -2070,13 +2135,10 @@ class pompom_TimerDisplay extends pine_ObserverComponent {
 		let array;
 		switch(this.trackedObject.state_timer.get().tracked.state_mode.get()._hx_index) {
 		case 0:
-			array = new pine_html_HtmlTextComponent({ content : "Paused"});
+			array = new pine_html_HtmlTextComponent({ content : "Work" + suffix});
 			break;
 		case 1:
-			array = new pine_html_HtmlTextComponent({ content : "Work"});
-			break;
-		case 2:
-			array = new pine_html_HtmlTextComponent({ content : "Break"});
+			array = new pine_html_HtmlTextComponent({ content : "Break" + suffix});
 			break;
 		}
 		let array1 = new pine_html_HtmlElementComponent({ tag : "h3", attrs : attrs1, key : attrs1.key, isSvg : false, children : [array].slice()});
@@ -2118,51 +2180,57 @@ Object.assign(pompom_TimerDisplay.prototype, {
 	__class__: pompom_TimerDisplay
 });
 var pompom_TimerMode = $hxEnums["pompom.TimerMode"] = { __ename__:true,__constructs__:null
-	,Paused: {_hx_name:"Paused",_hx_index:0,__enum__:"pompom.TimerMode",toString:$estr}
-	,Working: {_hx_name:"Working",_hx_index:1,__enum__:"pompom.TimerMode",toString:$estr}
-	,Break: {_hx_name:"Break",_hx_index:2,__enum__:"pompom.TimerMode",toString:$estr}
+	,Working: {_hx_name:"Working",_hx_index:0,__enum__:"pompom.TimerMode",toString:$estr}
+	,Break: {_hx_name:"Break",_hx_index:1,__enum__:"pompom.TimerMode",toString:$estr}
 };
-pompom_TimerMode.__constructs__ = [pompom_TimerMode.Paused,pompom_TimerMode.Working,pompom_TimerMode.Break];
+pompom_TimerMode.__constructs__ = [pompom_TimerMode.Working,pompom_TimerMode.Break];
 class pompom_TimerState {
 	constructor(props) {
 		this.timer = null;
-		this.prevMode = null;
+		if(props.paused == null) {
+			props.paused = true;
+		}
 		if(props.mode == null) {
-			props.mode = pompom_TimerMode.Paused;
+			props.mode = pompom_TimerMode.Working;
 		}
 		if(props.secondsElapsed == null) {
 			props.secondsElapsed = 0;
 		}
-		this.tracked = new pine_TrackedObject_$27c716fd7be837b16716bb1de74e2a1f({ mode : props.mode, secondsElapsed : props.secondsElapsed});
+		this.tracked = new pine_TrackedObject_$576d1671dac2a763630a2e40e9dd2283({ paused : props.paused, mode : props.mode, secondsElapsed : props.secondsElapsed});
 	}
 	start() {
-		if(this.tracked.state_mode.get() != pompom_TimerMode.Paused) {
+		if(!this.tracked.state_paused.get()) {
 			return;
 		}
-		this.tracked.state_mode.set(this.prevMode != null ? this.prevMode : pompom_TimerMode.Working);
-		this.prevMode = null;
-		if(this.timer != null) {
-			this.timer.stop();
-		}
-		this.timer = this.createTimer();
-	}
-	reset() {
-		this.tracked.state_secondsElapsed.set(0);
-		this.tracked.state_mode.set(pompom_TimerMode.Working);
-		this.prevMode = null;
+		this.tracked.state_paused.set(false);
 		if(this.timer != null) {
 			this.timer.stop();
 		}
 		this.timer = this.createTimer();
 	}
 	pause() {
-		if(this.tracked.state_mode.get() == pompom_TimerMode.Paused) {
+		if(this.tracked.state_paused.get()) {
 			return;
 		}
-		this.prevMode = this.tracked.state_mode.get();
-		this.tracked.state_mode.set(pompom_TimerMode.Paused);
+		this.tracked.state_paused.set(true);
 		this.timer.stop();
 		this.timer = null;
+	}
+	startWork() {
+		this.tracked.state_secondsElapsed.set(0);
+		this.tracked.state_mode.set(pompom_TimerMode.Working);
+		if(this.timer != null) {
+			this.timer.stop();
+		}
+		this.timer = this.createTimer();
+	}
+	takeBreak() {
+		this.tracked.state_secondsElapsed.set(0);
+		this.tracked.state_mode.set(pompom_TimerMode.Break);
+		if(this.timer != null) {
+			this.timer.stop();
+		}
+		this.timer = this.createTimer();
 	}
 	createTimer() {
 		let timer = new haxe_Timer(1000);
@@ -2173,13 +2241,13 @@ class pompom_TimerState {
 		let value = this.tracked.state_secondsElapsed.get() + 1;
 		this.tracked.state_secondsElapsed.set(value);
 		switch(this.tracked.state_mode.get()._hx_index) {
-		case 1:
+		case 0:
 			if(this.tracked.state_secondsElapsed.get() == 1500) {
 				this.tracked.state_mode.set(pompom_TimerMode.Break);
 				this.tracked.state_secondsElapsed.set(0);
 			}
 			break;
-		case 2:
+		case 1:
 			if(this.tracked.state_secondsElapsed.get() == 300) {
 				this.tracked.state_mode.set(pompom_TimerMode.Working);
 				this.tracked.state_secondsElapsed.set(0);
@@ -2220,10 +2288,12 @@ haxe_ds_ObjectMap.count = 0;
 js_Boot.__toStr = ({ }).toString;
 pine_Component._hx_skip_constructor = false;
 pine_Element._hx_skip_constructor = false;
+pine_UniqueId.uid = 0;
+pine_Isolate.__meta__ = { fields : { wrap : { prop : null}}};
+pine_Isolate.type = pine_UniqueId.uid++;
 pine_Observer.stack = new haxe_ds_List();
 pine_Process.stack = new haxe_ds_List();
 var pine_Process_hasRaf = typeof window != 'undefined' && 'requestAnimationFrame' in window;
-pine_UniqueId.uid = 0;
 pine_html_HtmlElementComponent.types = new haxe_ds_StringMap();
 pine_html_HtmlTextComponent.type = pine_UniqueId.uid++;
 pine_html_dom_DomRoot.type = pine_UniqueId.uid++;

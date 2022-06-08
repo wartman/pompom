@@ -5,15 +5,15 @@ import pine.*;
 import pine.html.*;
 
 class App extends ImmutableComponent {
-  @prop final state:TimerState = new TimerState({ mode: Paused });
+  @prop final state:TimerState = new TimerState({ mode: Working });
 
   override function init(context:InitContext) {
     Effect.from(context).add(() -> {
       var title = Browser.document.head.querySelector('title');
+      var suffix = state.paused ? ' (Paused)' : '';
       switch state.mode {
-        case Paused: title.innerHTML = 'PomPom | Paused';
-        case Working: title.innerHTML = 'PomPom | Working';
-        case Break: title.innerHTML = 'PomPom | On Break';
+        case Working: title.innerHTML = 'PomPom | Working$suffix';
+        case Break: title.innerHTML = 'PomPom | On Break$suffix';
       }
     });
   }
@@ -21,26 +21,40 @@ class App extends ImmutableComponent {
   public function render(context:Context) {
     return Html.div({},
       new TimerDisplay({ timer: state }),
-      Html.div({},
-        Html.button({
-          onclick: e -> {
-            e.preventDefault();
-            state.start();
-          }
-        }, 'Start'),
-        Html.button({
-          onclick: e -> {
-            e.preventDefault();
-            state.pause();
-          }
-        }, 'Pause'),
-        Html.button({
-          onclick: e -> {
-            e.preventDefault();
-            state.reset();
-          }
-        }, 'Reset')
-      )
+      new Isolate({
+        wrap: context -> Html.div({},
+          Html.div({}, switch state.paused {
+            case true:
+              Html.button({
+                onclick: e -> {
+                  e.preventDefault();
+                  state.start();
+                }
+              }, 'Start');
+            default:
+              Html.button({
+                onclick: e -> {
+                  e.preventDefault();
+                  state.pause();
+                }
+              }, 'Pause');
+          }),
+          Html.div({},
+            Html.button({
+              onclick: e -> {
+                e.preventDefault();
+                state.takeBreak();
+              }
+            }, 'Take Break'),
+            Html.button({
+              onclick: e -> {
+                e.preventDefault();
+                state.startWork();
+              }
+            }, 'Start Work')
+          )
+        )
+      })
     );
   }
 }

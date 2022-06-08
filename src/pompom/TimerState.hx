@@ -10,6 +10,8 @@ enum TimerMode {
 }
 
 class TimerState implements Record {
+  @track public var workLength:Int = 25; // In minutes
+  @track public var breakLength:Int = 5; // In minutes
   @track public var paused:Bool = true;
   @track public var mode:TimerMode = Working;
   @track public var secondsElapsed:Int = 0;
@@ -32,6 +34,7 @@ class TimerState implements Record {
   public function startWork() {
     secondsElapsed = 0;
     mode = Working;
+    if (paused) return;
     if (timer != null) timer.stop();
     timer = createTimer();
   }
@@ -39,6 +42,7 @@ class TimerState implements Record {
   public function takeBreak() {
     secondsElapsed = 0;
     mode = Break;
+    if (paused) return;
     if (timer != null) timer.stop();
     timer = createTimer();
   }
@@ -52,10 +56,10 @@ class TimerState implements Record {
   function run() {
     secondsElapsed += 1;
     switch mode {
-      case Working if (secondsElapsed == 1500): // 25 minutes
+      case Working if (secondsElapsed == (workLength * 60)):
         mode = Break;
         secondsElapsed = 0;
-      case Break if (secondsElapsed == 300): // 5 minutes
+      case Break if (secondsElapsed == (breakLength * 60)): // 5 minutes
         mode = Working;
         secondsElapsed = 0;
       default:

@@ -1,6 +1,13 @@
 (function ($global) { "use strict";
 var $estr = function() { return js_Boot.__string_rec(this,''); },$hxEnums = $hxEnums || {},$_;
 class HxOverrides {
+	static cca(s,index) {
+		let x = s.charCodeAt(index);
+		if(x != x) {
+			return undefined;
+		}
+		return x;
+	}
 	static substr(s,pos,len) {
 		if(len == null) {
 			len = s.length;
@@ -54,6 +61,7 @@ class Lambda {
 Lambda.__name__ = true;
 Math.__name__ = true;
 function Pom_main() {
+	nuke_Engine.getInstance().addRawCss("9C55ED54","html{margin:0} html{padding:0} body{font-family:Roboto, Helvetica, Arial, sans-serif} body{font-size:13px} body{box-sizing:border-box} *, *:before, *:after{box-sizing:inherit} button{border:none} button{outline:none} button{display:block} button{background:transparent} button{padding:0} button{margin:0} button{font-size:inherit} button{font-family:inherit} button:hover{cursor:pointer} button:disabled{cursor:default}");
 	new pine_html_dom_DomBootstrap(window.document.getElementById("root")).mount(new pompom_App({ }));
 }
 class Reflect {
@@ -92,6 +100,54 @@ class Reflect {
 	}
 }
 Reflect.__name__ = true;
+class StringTools {
+	static isSpace(s,pos) {
+		let c = HxOverrides.cca(s,pos);
+		if(!(c > 8 && c < 14)) {
+			return c == 32;
+		} else {
+			return true;
+		}
+	}
+	static ltrim(s) {
+		let l = s.length;
+		let r = 0;
+		while(r < l && StringTools.isSpace(s,r)) ++r;
+		if(r > 0) {
+			return HxOverrides.substr(s,r,l - r);
+		} else {
+			return s;
+		}
+	}
+	static rtrim(s) {
+		let l = s.length;
+		let r = 0;
+		while(r < l && StringTools.isSpace(s,l - r - 1)) ++r;
+		if(r > 0) {
+			return HxOverrides.substr(s,0,l - r);
+		} else {
+			return s;
+		}
+	}
+	static trim(s) {
+		return StringTools.ltrim(StringTools.rtrim(s));
+	}
+	static hex(n,digits) {
+		let s = "";
+		while(true) {
+			s = "0123456789ABCDEF".charAt(n & 15) + s;
+			n >>>= 4;
+			if(!(n > 0)) {
+				break;
+			}
+		}
+		if(digits != null) {
+			while(s.length < digits) s = "0" + s;
+		}
+		return s;
+	}
+}
+StringTools.__name__ = true;
 class haxe_IMap {
 }
 haxe_IMap.__name__ = true;
@@ -608,6 +664,172 @@ class js_Boot {
 	}
 }
 js_Boot.__name__ = true;
+class nuke_Atom {
+	static getHash(this1) {
+		switch(this1._hx_index) {
+		case 0:
+			return nuke_Atom.getHash(this1.atom) + "-" + nuke_internal_Hash_hash(this1.selector);
+		case 1:
+			return nuke_Atom.getHash(this1.atom) + "-" + nuke_internal_Hash_hash(this1.atRule);
+		case 2:
+			return this1.className;
+		case 3:
+			return nuke_internal_Prefix_withPrefix(nuke_internal_Hash_hash(nuke_Atom.toCss(this1)));
+		case 4:
+			return this1.className;
+		}
+	}
+	static getClassName(this1) {
+		return nuke_ClassName.ofString(nuke_Atom.getHash(this1));
+	}
+	static toCss(this1) {
+		switch(this1._hx_index) {
+		case 0:
+			return nuke_Atom.toCss(this1.atom);
+		case 1:
+			return nuke_Atom.toCss(this1.atom);
+		case 2:
+			return this1.css;
+		case 3:
+			return "" + this1.prop + ":" + this1.value;
+		case 4:
+			return "";
+		}
+	}
+	static render(this1) {
+		switch(this1._hx_index) {
+		case 0:
+			return "." + nuke_Atom.getHash(this1) + this1.selector + (" {" + nuke_Atom.toCss(this1.atom) + "}");
+		case 1:
+			let _g = this1.atRule;
+			let _g1 = this1.atom;
+			let _g2 = _g1;
+			if(_g2._hx_index == 0) {
+				return "@" + _g + " { ." + nuke_Atom.getHash(this1) + _g2.selector + " {" + nuke_Atom.toCss(_g2.atom) + "} }";
+			} else {
+				return "@" + _g + " { ." + nuke_Atom.getHash(this1) + " {" + nuke_Atom.toCss(_g1) + "} }";
+			}
+			break;
+		case 2:
+			return "." + this1.className + " {" + this1.css + "}";
+		case 3:
+			return "." + nuke_Atom.getHash(this1) + " {" + nuke_Atom.toCss(this1) + "}";
+		case 4:
+			return "";
+		}
+	}
+}
+var nuke_AtomType = $hxEnums["nuke.AtomType"] = { __ename__:true,__constructs__:null
+	,AtomChild: ($_=function(selector,atom) { return {_hx_index:0,selector:selector,atom:atom,__enum__:"nuke.AtomType",toString:$estr}; },$_._hx_name="AtomChild",$_.__params__ = ["selector","atom"],$_)
+	,AtomAtRule: ($_=function(atRule,atom) { return {_hx_index:1,atRule:atRule,atom:atom,__enum__:"nuke.AtomType",toString:$estr}; },$_._hx_name="AtomAtRule",$_.__params__ = ["atRule","atom"],$_)
+	,AtomStatic: ($_=function(className,css) { return {_hx_index:2,className:className,css:css,__enum__:"nuke.AtomType",toString:$estr}; },$_._hx_name="AtomStatic",$_.__params__ = ["className","css"],$_)
+	,AtomDynamic: ($_=function(prop,value) { return {_hx_index:3,prop:prop,value:value,__enum__:"nuke.AtomType",toString:$estr}; },$_._hx_name="AtomDynamic",$_.__params__ = ["prop","value"],$_)
+	,AtomPrerendered: ($_=function(className) { return {_hx_index:4,className:className,__enum__:"nuke.AtomType",toString:$estr}; },$_._hx_name="AtomPrerendered",$_.__params__ = ["className"],$_)
+};
+nuke_AtomType.__constructs__ = [nuke_AtomType.AtomChild,nuke_AtomType.AtomAtRule,nuke_AtomType.AtomStatic,nuke_AtomType.AtomDynamic,nuke_AtomType.AtomPrerendered];
+class nuke_ClassName {
+	static ofString(s) {
+		if(s == null) {
+			return null;
+		} else {
+			return StringTools.trim(s);
+		}
+	}
+	static ofAtoms(parts) {
+		let result = new Array(parts.length);
+		let _g = 0;
+		let _g1 = parts.length;
+		while(_g < _g1) {
+			let i = _g++;
+			result[i] = nuke_Atom.getClassName(parts[i]);
+		}
+		return result.join(" ");
+	}
+	static with(this1,other) {
+		let _g = other;
+		return this1 == null ? _g : _g == null ? this1 : "" + this1 + " " + _g;
+	}
+}
+class nuke_Engine {
+	constructor(injector) {
+		this.ruleIndexes = [];
+		this.injector = injector;
+	}
+	add(atom) {
+		let key = nuke_Atom.getHash(atom);
+		if(!this.ruleIndexes.includes(key)) {
+			let ret = this.injector.insert(nuke_Atom.render(atom),this.ruleIndexes.length);
+			this.ruleIndexes.push(key);
+			return ret;
+		}
+		return 0;
+	}
+	addRawCss(key,css) {
+		if(!this.ruleIndexes.includes(key)) {
+			let ret = this.injector.insert(css,this.ruleIndexes.length);
+			this.ruleIndexes.push(key);
+			return ret;
+		}
+		return 0;
+	}
+	static getInstance() {
+		if(nuke_Engine.instance == null) {
+			nuke_Engine.instance = new nuke_Engine(new nuke_injector_CssOmInjector());
+		}
+		return nuke_Engine.instance;
+	}
+}
+nuke_Engine.__name__ = true;
+Object.assign(nuke_Engine.prototype, {
+	__class__: nuke_Engine
+});
+class nuke_Injector {
+}
+nuke_Injector.__name__ = true;
+nuke_Injector.__isInterface__ = true;
+Object.assign(nuke_Injector.prototype, {
+	__class__: nuke_Injector
+});
+class nuke_injector_CssOmInjector {
+	constructor(sheet) {
+		this.sheet = sheet != null ? sheet : nuke_injector_Tools.getStyleEl().sheet;
+	}
+	insert(rule,index) {
+		try {
+			return this.sheet.insertRule("@media all { " + rule + " }",index);
+		} catch( _g ) {
+			return -1;
+		}
+	}
+}
+nuke_injector_CssOmInjector.__name__ = true;
+nuke_injector_CssOmInjector.__interfaces__ = [nuke_Injector];
+Object.assign(nuke_injector_CssOmInjector.prototype, {
+	__class__: nuke_injector_CssOmInjector
+});
+class nuke_injector_Tools {
+	static getStyleEl() {
+		let _g = window.document.getElementById(nuke_injector_Tools.styleId);
+		if(_g == null) {
+			let el = window.document.createElement("style");
+			el.id = nuke_injector_Tools.styleId;
+			window.document.head.appendChild(el);
+			return el;
+		} else {
+			return _g;
+		}
+	}
+}
+nuke_injector_Tools.__name__ = true;
+function nuke_internal_Hash_hash(str) {
+	let i = 0;
+	let out = 11;
+	while(i < str.length) out = 101 * out + HxOverrides.cca(str,i++) >>> 0;
+	return StringTools.hex(out);
+}
+function nuke_internal_Prefix_withPrefix(hash) {
+	return "_nu" + hash;
+}
 class pine_Component {
 	constructor(key) {
 		if(pine_Component._hx_skip_constructor) {
@@ -1662,22 +1884,26 @@ pine_State.__interfaces__ = [pine_Disposable];
 Object.assign(pine_State.prototype, {
 	__class__: pine_State
 });
-class pine_TrackedObject_$576d1671dac2a763630a2e40e9dd2283 {
+class pine_TrackedObject_$4a7e9a0f5c77c80394cbb0314018c614 {
 	constructor(props) {
+		this.state_workLength = new pine_State(props.workLength);
 		this.state_secondsElapsed = new pine_State(props.secondsElapsed);
 		this.state_paused = new pine_State(props.paused);
 		this.state_mode = new pine_State(props.mode);
+		this.state_breakLength = new pine_State(props.breakLength);
 	}
 	dispose() {
+		this.state_workLength.dispose();
 		this.state_secondsElapsed.dispose();
 		this.state_paused.dispose();
 		this.state_mode.dispose();
+		this.state_breakLength.dispose();
 	}
 }
-pine_TrackedObject_$576d1671dac2a763630a2e40e9dd2283.__name__ = true;
-pine_TrackedObject_$576d1671dac2a763630a2e40e9dd2283.__interfaces__ = [pine_Disposable];
-Object.assign(pine_TrackedObject_$576d1671dac2a763630a2e40e9dd2283.prototype, {
-	__class__: pine_TrackedObject_$576d1671dac2a763630a2e40e9dd2283
+pine_TrackedObject_$4a7e9a0f5c77c80394cbb0314018c614.__name__ = true;
+pine_TrackedObject_$4a7e9a0f5c77c80394cbb0314018c614.__interfaces__ = [pine_Disposable];
+Object.assign(pine_TrackedObject_$4a7e9a0f5c77c80394cbb0314018c614.prototype, {
+	__class__: pine_TrackedObject_$4a7e9a0f5c77c80394cbb0314018c614
 });
 class pine_TrackedObject_$b958dd0262ea2d31051a5e42b38d7b09 {
 	constructor(props) {
@@ -2066,26 +2292,64 @@ class pompom_App extends pine_ImmutableComponent {
 	}
 	render(context) {
 		let _gthis = this;
-		let attrs = { };
+		let atom = nuke_AtomType.AtomStatic("_nu6C9FFC0A","margin:2rem auto");
+		nuke_Engine.getInstance().add(atom);
+		let atom1 = nuke_AtomType.AtomStatic("_nu829AD13","max-width:250px");
+		nuke_Engine.getInstance().add(atom1);
+		let atom2 = nuke_AtomType.AtomStatic("_nuED411AB6","display:flex");
+		nuke_Engine.getInstance().add(atom2);
+		let atom3 = nuke_AtomType.AtomStatic("_nu2F93709C","flex-direction:column");
+		nuke_Engine.getInstance().add(atom3);
+		let atom4 = nuke_AtomType.AtomStatic("_nu50EF4B04","align-items:center");
+		nuke_Engine.getInstance().add(atom4);
+		let attrs = { className : nuke_ClassName.ofAtoms([atom,atom1,atom2,atom3,atom4])};
 		let children = [new pompom_TimerDisplay({ timer : this.state}),new pine_Isolate({ wrap : function(context) {
-			let attrs = { };
+			let atom = nuke_AtomType.AtomStatic("_nuED411AB6","display:flex");
+			nuke_Engine.getInstance().add(atom);
+			let atom1 = nuke_AtomType.AtomStatic("_nu83065E8E","gap:1rem");
+			nuke_Engine.getInstance().add(atom1);
+			let attrs = { className : nuke_ClassName.ofAtoms([atom,atom1])};
 			let attrs1 = { };
 			let array;
 			if(_gthis.state.tracked.state_paused.get() == true) {
-				let attrs = { onclick : function(e) {
+				let atom = nuke_AtomType.AtomStatic("_nuCBFA9888","background-color:rgb(183,181,85)");
+				nuke_Engine.getInstance().add(atom);
+				let atom1 = nuke_AtomType.AtomStatic("_nuDEDEAF59","color:#fff");
+				nuke_Engine.getInstance().add(atom1);
+				let atom2 = nuke_AtomType.AtomStatic("_nu64EB7511","padding:1rem");
+				nuke_Engine.getInstance().add(atom2);
+				let atom3 = nuke_AtomType.AtomStatic("_nu8A0E6926","border-radius:2rem");
+				nuke_Engine.getInstance().add(atom3);
+				let atom4 = nuke_AtomType.AtomStatic("_nu3D860CE6","font-weight:bold");
+				nuke_Engine.getInstance().add(atom4);
+				let attrs = { className : nuke_ClassName.ofAtoms([atom,atom1,atom2,atom3,atom4]), onclick : function(e) {
 					e.preventDefault();
 					_gthis.state.start();
 				}};
 				array = new pine_html_HtmlElementComponent({ tag : "button", attrs : attrs, key : attrs.key, isSvg : false, children : [new pine_html_HtmlTextComponent({ content : "Start"})].slice()});
 			} else {
-				let attrs = { onclick : function(e) {
+				let atom = nuke_AtomType.AtomStatic("_nu39B14EC5","background-color:rgb(196,196,196)");
+				nuke_Engine.getInstance().add(atom);
+				let atom1 = nuke_AtomType.AtomStatic("_nuDEDEAF59","color:#fff");
+				nuke_Engine.getInstance().add(atom1);
+				let atom2 = nuke_AtomType.AtomStatic("_nu64EB7511","padding:1rem");
+				nuke_Engine.getInstance().add(atom2);
+				let atom3 = nuke_AtomType.AtomStatic("_nu8A0E6926","border-radius:2rem");
+				nuke_Engine.getInstance().add(atom3);
+				let atom4 = nuke_AtomType.AtomStatic("_nu3D860CE6","font-weight:bold");
+				nuke_Engine.getInstance().add(atom4);
+				let attrs = { className : nuke_ClassName.ofAtoms([atom,atom1,atom2,atom3,atom4]), onclick : function(e) {
 					e.preventDefault();
 					_gthis.state.pause();
 				}};
 				array = new pine_html_HtmlElementComponent({ tag : "button", attrs : attrs, key : attrs.key, isSvg : false, children : [new pine_html_HtmlTextComponent({ content : "Pause"})].slice()});
 			}
 			let array1 = new pine_html_HtmlElementComponent({ tag : "div", attrs : attrs1, key : attrs1.key, isSvg : false, children : [array].slice()});
-			let attrs2 = { };
+			let atom2 = nuke_AtomType.AtomStatic("_nuED411AB6","display:flex");
+			nuke_Engine.getInstance().add(atom2);
+			let atom3 = nuke_AtomType.AtomStatic("_nu83065E8E","gap:1rem");
+			nuke_Engine.getInstance().add(atom3);
+			let attrs2 = { className : nuke_ClassName.ofAtoms([atom2,atom3])};
 			let attrs3 = { onclick : function(e) {
 				e.preventDefault();
 				_gthis.state.takeBreak();
@@ -2128,7 +2392,17 @@ class pompom_TimerDisplay extends pine_ObserverComponent {
 		}
 		let suffix = this.trackedObject.state_timer.get().tracked.state_paused.get() ? " (Paused)" : "";
 		let attrs = { };
-		let attrs1 = { };
+		let atom = nuke_AtomType.AtomStatic("_nuDB6BA5D7","color:#535353");
+		nuke_Engine.getInstance().add(atom);
+		let atom1 = nuke_AtomType.AtomStatic("_nu7C0BDD7B","margin-top:0");
+		nuke_Engine.getInstance().add(atom1);
+		let atom2 = nuke_AtomType.AtomStatic("_nu197CFB7E","margin-bottom:1rem");
+		nuke_Engine.getInstance().add(atom2);
+		let atom3 = nuke_AtomType.AtomStatic("_nuC8BCEFEB","text-align:center");
+		nuke_Engine.getInstance().add(atom3);
+		let atom4 = nuke_AtomType.AtomStatic("_nuDB0CB6EB","width:100%");
+		nuke_Engine.getInstance().add(atom4);
+		let attrs1 = { className : nuke_ClassName.ofAtoms([atom,atom1,atom2,atom3,atom4])};
 		if(this.trackedObject == null) {
 			throw new pine_PineException("Failed assertion: this.trackedObject != null");
 		}
@@ -2142,17 +2416,76 @@ class pompom_TimerDisplay extends pine_ObserverComponent {
 			break;
 		}
 		let array1 = new pine_html_HtmlElementComponent({ tag : "h3", attrs : attrs1, key : attrs1.key, isSvg : false, children : [array].slice()});
-		let attrs2 = { };
+		let atom5 = nuke_AtomType.AtomStatic("_nu105974EC","margin:1rem 0");
+		nuke_Engine.getInstance().add(atom5);
+		let atom6 = nuke_AtomType.AtomStatic("_nu67F63469","font-size:5rem");
+		nuke_Engine.getInstance().add(atom6);
+		let atom7 = nuke_AtomType.AtomStatic("_nu8A2DDA60","border-radius:4rem");
+		nuke_Engine.getInstance().add(atom7);
+		let atom8 = nuke_AtomType.AtomStatic("_nuDEDEAF59","color:#fff");
+		nuke_Engine.getInstance().add(atom8);
+		let atom9 = nuke_AtomType.AtomStatic("_nu64FB2DAE","padding:2rem");
+		nuke_Engine.getInstance().add(atom9);
+		let atom10 = nuke_AtomType.AtomStatic("_nuDB0CB6EB","width:100%");
+		nuke_Engine.getInstance().add(atom10);
+		let atom11 = nuke_AtomType.AtomStatic("_nuC8BCEFEB","text-align:center");
+		nuke_Engine.getInstance().add(atom11);
+		let attrs2 = nuke_ClassName.ofAtoms([atom5,atom6,atom7,atom8,atom9,atom10,atom11]);
+		if(this.trackedObject == null) {
+			throw new pine_PineException("Failed assertion: this.trackedObject != null");
+		}
+		let _g = this.trackedObject.state_timer.get().tracked.state_mode.get();
+		let attrs3;
+		if(this.trackedObject == null) {
+			throw new pine_PineException("Failed assertion: this.trackedObject != null");
+		}
+		if(this.trackedObject.state_timer.get().tracked.state_paused.get()) {
+			let atom = nuke_AtomType.AtomStatic("_nu39B14EC5","background-color:rgb(196,196,196)");
+			nuke_Engine.getInstance().add(atom);
+			attrs3 = nuke_ClassName.ofAtoms([atom]);
+		} else {
+			switch(_g._hx_index) {
+			case 0:
+				let atom12 = nuke_AtomType.AtomStatic("_nuCBFA9888","background-color:rgb(183,181,85)");
+				nuke_Engine.getInstance().add(atom12);
+				attrs3 = nuke_ClassName.ofAtoms([atom12]);
+				break;
+			case 1:
+				let atom13 = nuke_AtomType.AtomStatic("_nuB63F3DF1","background-color:rgb(154,141,215)");
+				nuke_Engine.getInstance().add(atom13);
+				attrs3 = nuke_ClassName.ofAtoms([atom13]);
+				break;
+			}
+		}
+		let attrs4 = { className : nuke_ClassName.with(attrs2,attrs3)};
 		if(this.trackedObject == null) {
 			throw new pine_PineException("Failed assertion: this.trackedObject != null");
 		}
 		let children = [new pine_html_HtmlTextComponent({ content : this.format(new Date(this.trackedObject.state_timer.get().tracked.state_secondsElapsed.get() * 1000))})];
-		let children1 = [array1,new pine_html_HtmlElementComponent({ tag : "h1", attrs : attrs2, key : attrs2.key, isSvg : false, children : children.slice()})];
+		let children1 = [array1,new pine_html_HtmlElementComponent({ tag : "h1", attrs : attrs4, key : attrs4.key, isSvg : false, children : children.slice()})];
 		return new pine_html_HtmlElementComponent({ tag : "div", attrs : attrs, key : attrs.key, isSvg : false, children : children1.slice()});
 	}
 	format(date) {
-		let minutes = date.getMinutes() + "";
-		let seconds = date.getSeconds() + "";
+		let time;
+		if(this.trackedObject == null) {
+			throw new pine_PineException("Failed assertion: this.trackedObject != null");
+		}
+		switch(this.trackedObject.state_timer.get().tracked.state_mode.get()._hx_index) {
+		case 0:
+			if(this.trackedObject == null) {
+				throw new pine_PineException("Failed assertion: this.trackedObject != null");
+			}
+			time = this.trackedObject.state_timer.get().tracked.state_workLength.get();
+			break;
+		case 1:
+			if(this.trackedObject == null) {
+				throw new pine_PineException("Failed assertion: this.trackedObject != null");
+			}
+			time = this.trackedObject.state_timer.get().tracked.state_breakLength.get();
+			break;
+		}
+		let minutes = (date.getSeconds() >= 1 ? time - 1 : time) - date.getMinutes() + "";
+		let seconds = date.getSeconds() == 0 ? "0" : 60 - date.getSeconds() + "";
 		if(minutes.length == 1) {
 			minutes = "0" + minutes;
 		}
@@ -2187,6 +2520,12 @@ pompom_TimerMode.__constructs__ = [pompom_TimerMode.Working,pompom_TimerMode.Bre
 class pompom_TimerState {
 	constructor(props) {
 		this.timer = null;
+		if(props.workLength == null) {
+			props.workLength = 25;
+		}
+		if(props.breakLength == null) {
+			props.breakLength = 5;
+		}
 		if(props.paused == null) {
 			props.paused = true;
 		}
@@ -2196,7 +2535,7 @@ class pompom_TimerState {
 		if(props.secondsElapsed == null) {
 			props.secondsElapsed = 0;
 		}
-		this.tracked = new pine_TrackedObject_$576d1671dac2a763630a2e40e9dd2283({ paused : props.paused, mode : props.mode, secondsElapsed : props.secondsElapsed});
+		this.tracked = new pine_TrackedObject_$4a7e9a0f5c77c80394cbb0314018c614({ workLength : props.workLength, breakLength : props.breakLength, paused : props.paused, mode : props.mode, secondsElapsed : props.secondsElapsed});
 	}
 	start() {
 		if(!this.tracked.state_paused.get()) {
@@ -2219,6 +2558,9 @@ class pompom_TimerState {
 	startWork() {
 		this.tracked.state_secondsElapsed.set(0);
 		this.tracked.state_mode.set(pompom_TimerMode.Working);
+		if(this.tracked.state_paused.get()) {
+			return;
+		}
 		if(this.timer != null) {
 			this.timer.stop();
 		}
@@ -2227,6 +2569,9 @@ class pompom_TimerState {
 	takeBreak() {
 		this.tracked.state_secondsElapsed.set(0);
 		this.tracked.state_mode.set(pompom_TimerMode.Break);
+		if(this.tracked.state_paused.get()) {
+			return;
+		}
 		if(this.timer != null) {
 			this.timer.stop();
 		}
@@ -2242,13 +2587,13 @@ class pompom_TimerState {
 		this.tracked.state_secondsElapsed.set(value);
 		switch(this.tracked.state_mode.get()._hx_index) {
 		case 0:
-			if(this.tracked.state_secondsElapsed.get() == 1500) {
+			if(this.tracked.state_secondsElapsed.get() == this.tracked.state_workLength.get() * 60) {
 				this.tracked.state_mode.set(pompom_TimerMode.Break);
 				this.tracked.state_secondsElapsed.set(0);
 			}
 			break;
 		case 1:
-			if(this.tracked.state_secondsElapsed.get() == 300) {
+			if(this.tracked.state_secondsElapsed.get() == this.tracked.state_breakLength.get() * 60) {
 				this.tracked.state_mode.set(pompom_TimerMode.Working);
 				this.tracked.state_secondsElapsed.set(0);
 			}
@@ -2286,6 +2631,7 @@ if(typeof(performance) != "undefined" ? typeof(performance.now) == "function" : 
 }
 haxe_ds_ObjectMap.count = 0;
 js_Boot.__toStr = ({ }).toString;
+nuke_injector_Tools.styleId = "__nuke__";
 pine_Component._hx_skip_constructor = false;
 pine_Element._hx_skip_constructor = false;
 pine_UniqueId.uid = 0;

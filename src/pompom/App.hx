@@ -24,10 +24,14 @@ class App extends ImmutableComponent {
     return Html.div({
       className: Css.atoms({
         margin: [ 2.rem(), 'auto' ],
-        maxWidth: 250.px(),
+        maxWidth: 300.px(),
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: rgb(85, 85, 85),
+        color: rgb(159, 159, 159),
+        padding: 2.rem(),
+        borderRadius: 2.rem(),
       })
     },
       new TimerDisplay({ timer: state }),
@@ -43,11 +47,13 @@ class App extends ImmutableComponent {
               // todo: Break these out into components
               Html.button({
                 className: Css.atoms({
-                  backgroundColor: rgb(183, 181, 85),
-                  color: '#fff',
+                  color: rgb(85, 85, 85),
                   padding: 1.rem(),
-                  borderRadius: 2.rem(),
+                  borderRadius: 4.rem(),
                   fontWeight: 'bold'
+                }).with(switch state.mode {
+                  case Working: Css.atoms({ backgroundColor: rgb(183, 181, 85) });
+                  case Break: Css.atoms({ backgroundColor: rgb(139, 126, 204) });
                 }),
                 onclick: e -> {
                   e.preventDefault();
@@ -57,8 +63,8 @@ class App extends ImmutableComponent {
             default:
               Html.button({
                 className: Css.atoms({
-                  backgroundColor: rgb(196, 196, 196),
-                  color: '#fff',
+                  color: rgb(85, 85, 85),
+                  backgroundColor: rgb(159, 159, 159),
                   padding: 1.rem(),
                   borderRadius: 2.rem(),
                   fontWeight: 'bold'

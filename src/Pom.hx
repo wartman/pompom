@@ -13,7 +13,8 @@ function main() {
     'body': {
       fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
       fontSize: 13.px(),
-      boxSizing: 'border-box'
+      boxSizing: 'border-box',
+      backgroundColor: rgb(34, 34, 34)
     },
     '*, *:before, *:after': {
       boxSizing: 'inherit'
@@ -25,6 +26,7 @@ function main() {
       background: 'transparent',
       padding: 0,
       margin: 0,
+      color: 'inherit',
       fontSize: 'inherit',
       fontFamily: 'inherit',
       '&:hover': {

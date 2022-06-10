@@ -38,6 +38,21 @@ function main() {
     }
   });
 
+  Theme.global({
+    pompom: {
+      color: {
+        dark: rgb(85, 85, 85),
+        light: rgb(159, 159, 159),
+        working: rgb(183, 181, 85),
+        onBreak: rgb(139, 126, 204)
+      },
+      button: {
+        bgColor: theme(pompom.color.light),
+        color: theme(pompom.color.dark)
+      }
+    }
+  });
+
   var boot = new DomBootstrap(Browser.document.getElementById('root'));
   boot.mount(new App({}));
 }

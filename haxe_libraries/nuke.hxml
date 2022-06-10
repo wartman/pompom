@@ -1,3 +1,3 @@
-# @install: lix --silent download "gh://github.com/wartman/nuke#20af39871b398d642264bbb9758c028967726035" into nuke/0.0.1/github/20af39871b398d642264bbb9758c028967726035
--cp ${HAXE_LIBCACHE}/nuke/0.0.1/github/20af39871b398d642264bbb9758c028967726035/src
+# @install: lix --silent download "gh://github.com/wartman/nuke#b4daf4f62e2fa01e9777242512ca2d81db884668" into nuke/0.0.1/github/b4daf4f62e2fa01e9777242512ca2d81db884668
+-cp ${HAXE_LIBCACHE}/nuke/0.0.1/github/b4daf4f62e2fa01e9777242512ca2d81db884668/src
 -D nuke=0.0.1
